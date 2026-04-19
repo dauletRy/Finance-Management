@@ -1,0 +1,37 @@
+<div class="w-72 bg-black text-white h-screen p-6 flex flex-col">
+  <div class="flex items-center gap-3 mb-12">
+    <div class="w-10 h-10 bg-white text-black rounded-2xl flex items-center justify-center text-3xl">💰</div>
+    <h1 class="text-3xl font-bold">FineBank</h1>
+  </div>
+
+  <nav class="flex-1">
+    <a routerLink="/overview"
+       routerLinkActive="bg-white text-black"
+       class="flex items-center gap-4 px-6 py-4 rounded-3xl mb-2 hover:bg-white/10 transition">
+      <span class="text-2xl">📊</span>
+      <span class="font-medium">Overview</span>
+    </a>
+
+    <a routerLink="/cards"
+       routerLinkActive="bg-white text-black"
+       class="flex items-center gap-4 px-6 py-4 rounded-3xl mb-2 hover:bg-white/10 transition">
+      <span class="text-2xl">💳</span>
+      <span class="font-medium">Cards</span>
+    </a>
+
+    <a routerLink="/transactions"
+       routerLinkActive="bg-white text-black"
+       class="flex items-center gap-4 px-6 py-4 rounded-3xl mb-2 hover:bg-white/10 transition">
+      <span class="text-2xl">📋</span>
+      <span class="font-medium">Transactions</span>
+    </a>
+  </nav>
+
+  <div class="mt-auto">
+    <button (click)="logout()"
+            class="flex items-center gap-3 w-full px-6 py-4 hover:bg-white/10 rounded-3xl text-left">
+      <span class="text-2xl">🚪</span>
+      <span class="font-medium">Logout</span>
+    </button>
+  </div>
+</div>
