@@ -65,11 +65,11 @@ export class OverviewComponent implements OnInit, AfterViewInit {
   getAvailableCategories() {
     if (this.newTransaction.transaction_type === 'income') {
       return this.categories.filter(cat =>
-        ['Salary', 'Transfer', 'Other'].includes(cat.name)
+        ['Salary', 'Freelance', 'Other'].includes(cat.name)
       );
     }
     return this.categories.filter(cat =>
-      !['Salary'].includes(cat.name)
+      !['Salary', 'Freelance'].includes(cat.name)
     );
   }
 
