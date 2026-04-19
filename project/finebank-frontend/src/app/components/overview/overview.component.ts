@@ -62,6 +62,21 @@ export class OverviewComponent implements OnInit, AfterViewInit {
     });
   }
 
+  getAvailableCategories() {
+    if (this.newTransaction.transaction_type === 'income') {
+      return this.categories.filter(cat =>
+        ['Salary', 'Transfer', 'Other'].includes(cat.name)
+      );
+    }
+    return this.categories.filter(cat =>
+      !['Salary'].includes(cat.name)
+    );
+  }
+
+  onTypeChange() {
+    this.newTransaction.category = null;
+  }
+
   nextCard() {
     const idx = this.cards.findIndex(c => c.id === this.activeCardId);
     this.activeCardId = this.cards[(idx + 1) % this.cards.length].id;

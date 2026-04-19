@@ -74,10 +74,19 @@
         }
       </select>
 
+      <select [(ngModel)]="newTransaction.transaction_type" name="type"
+              class="w-full p-4 border rounded-3xl mb-4"
+              (change)="onTypeChange()">
+        <option value="expense">Expense</option>
+        <option value="income">Income</option>
+      </select>
+
       <select [(ngModel)]="newTransaction.category" name="category" class="w-full p-4 border rounded-3xl mb-4" required>
-        <option value="" disabled selected>Select Category</option>
-        @for (cat of categories; track cat.id) {
-          <option [value]="cat.id">{{ cat.name }}</option>
+        <option value="" disabled selected>
+          {{ newTransaction.transaction_type === 'income' ? 'Select Income Source' : 'Select Category' }}
+        </option>
+        @for (cat of getAvailableCategories(); track cat.id) {
+          <option [value]="cat.id">{{ cat.icon }} {{ cat.name }}</option>
         }
       </select>
 
@@ -86,11 +95,6 @@
 
       <input [(ngModel)]="newTransaction.description" name="description" placeholder="Where spent?"
              class="w-full p-4 border rounded-3xl mb-4" required>
-
-      <select [(ngModel)]="newTransaction.transaction_type" name="type" class="w-full p-4 border rounded-3xl mb-6">
-        <option value="expense">Expense</option>
-        <option value="income">Income</option>
-      </select>
 
       <button type="submit"
               class="w-full py-5 bg-black text-white text-xl font-semibold rounded-3xl">
