@@ -40,8 +40,10 @@ export class CardsComponent implements OnInit {
 
   deleteCard(id: number) {
     if (confirm('Delete this card?')) {
-      // Add delete endpoint if you want, or skip for now
-      alert('Delete functionality can be added later');
+      this.finance.deleteCard(id).subscribe({
+        next: () => this.loadCards(),
+        error: () => this.errorMessage = 'Failed to delete card'
+      });
     }
   }
 }

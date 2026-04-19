@@ -171,3 +171,13 @@ class TransactionDetail(APIView):   # second CBV – Update / Delete
         transaction.delete()
 
         return Response(status=204)
+class CardDetail(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request, pk):
+        try:
+            card = Card.objects.get(pk=pk, user=request.user)
+            card.delete()
+            return Response(status=204)
+        except Card.DoesNotExist:
+            return Response(status=404)

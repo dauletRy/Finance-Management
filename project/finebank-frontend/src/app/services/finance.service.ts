@@ -8,16 +8,39 @@ export class FinanceService {
 
   constructor(private http: HttpClient) {}
 
-  createCard(data: any) {
+  getCards(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/cards/`);
+  }
+
+  createCard(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/cards/`, data);
   }
 
-  getCards(): Observable<any> { return this.http.get(`${this.apiUrl}/cards/`); }
-  getTransactions(): Observable<any> { return this.http.get(`${this.apiUrl}/transactions/`); }
-  createTransaction(data: any): Observable<any> { return this.http.post(`${this.apiUrl}/transactions/`, data); }
-  getDashboard(): Observable<any> { return this.http.get(`${this.apiUrl}/dashboard/`); }
+  deleteCard(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/cards/${id}/`);
+  }
+
+  getTransactions(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/transactions/`);
+  }
+
+  createTransaction(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/transactions/`, data);
+  }
+
+  deleteTransaction(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/transactions/${id}/`);
+  }
+
+  getDashboard(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/dashboard/`);
+  }
+
+  getCategories(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/categories/`);
+  }
+
   exportCSV(): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/export-csv/`, { responseType: 'blob' });
   }
-  // + delete, update, etc. for full CRUD
 }

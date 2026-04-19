@@ -39,7 +39,10 @@ export class TransactionsComponent implements OnInit {
       error: () => this.errorMessage = 'Failed to load transactions'
     });
 
-    // You can also load categories if needed
+    this.finance.getCategories().subscribe({
+      next: (data) => this.categories = data,
+      error: () => {}
+    });
   }
 
   filter() {
@@ -60,9 +63,10 @@ export class TransactionsComponent implements OnInit {
 
   deleteTransaction(id: number) {
     if (confirm('Delete this transaction?')) {
-      // You can implement DELETE via service if you want
-      alert('Transaction deleted (add DELETE method to service for full CRUD)');
-      this.loadData();
+      this.finance.deleteTransaction(id).subscribe({
+        next: () => this.loadData(),
+        error: () => this.errorMessage = 'Failed to delete transaction'
+      });
     }
   }
 }

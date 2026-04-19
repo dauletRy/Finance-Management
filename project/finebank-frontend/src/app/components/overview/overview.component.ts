@@ -3,13 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FinanceService } from '../../services/finance.service';
 import { AuthService } from '../../services/auth.service';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import Chart from 'chart.js/auto';
 
 @Component({
   selector: 'app-overview',
   standalone: true,
-  imports: [CommonModule, FormsModule, SidebarComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './overview.component.html'
 })
 export class OverviewComponent implements OnInit, AfterViewInit {
@@ -39,9 +38,7 @@ export class OverviewComponent implements OnInit, AfterViewInit {
     this.loadData();
   }
 
-  ngAfterViewInit() {
-    // Chart will be rendered after data loads
-  }
+  ngAfterViewInit() {}
 
   loadData() {
     this.finance.getCards().subscribe(data => {
@@ -59,26 +56,30 @@ export class OverviewComponent implements OnInit, AfterViewInit {
     this.finance.getDashboard().subscribe(data => {
       this.renderChart(data);
     });
+
+    this.finance.getCategories().subscribe(data => {
+      this.categories = data;
+    });
   }
 
-  nextCard() { // Click event 1
+  nextCard() {
     const idx = this.cards.findIndex(c => c.id === this.activeCardId);
     this.activeCardId = this.cards[(idx + 1) % this.cards.length].id;
     this.checkBudgetAlert();
   }
 
-  addTransaction() { // Click event 2
+  addTransaction() {
     this.finance.createTransaction(this.newTransaction).subscribe({
       next: () => {
-        alert('✅ Transaction added successfully!');
+        alert('Transaction added successfully!');
         this.loadData();
         this.newTransaction = { card: null, category: null, amount: null, description: '', transaction_type: 'expense' };
       },
-      error: (err) => alert('❌ ' + (err.error?.detail || 'Failed to add transaction'))
+      error: (err) => alert(err.error?.detail || 'Failed to add transaction')
     });
   }
 
-  exportCSV() { // Click event 3
+  exportCSV() {
     this.finance.exportCSV().subscribe(blob => {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -88,7 +89,7 @@ export class OverviewComponent implements OnInit, AfterViewInit {
     });
   }
 
-  logout() { // Click event 4
+  logout() {
     this.auth.logout();
     window.location.href = '/login';
   }
