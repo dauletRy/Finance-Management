@@ -3,9 +3,35 @@
   <div class="flex-1 p-8 overflow-auto">
     <h1 class="text-4xl font-bold">Welcome back, {{ username }} 👋</h1>
 
+    @if (successMessage) {
+      <div class="mt-4 bg-green-100 border-2 border-green-500 text-green-700 p-4 rounded-3xl">
+        ✅ {{ successMessage }}
+      </div>
+    }
+    @if (errorMessage) {
+      <div class="mt-4 bg-red-100 border-2 border-red-500 text-red-700 p-4 rounded-3xl">
+        ❌ {{ errorMessage }}
+      </div>
+    }
+
     <div class="mt-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-3xl">
       <p class="text-lg opacity-90">Total Balance</p>
       <p class="text-6xl font-bold">${{ totalBalance | number:'1.2-2' }}</p>
+    </div>
+
+    <div class="mt-6 grid grid-cols-3 gap-4">
+      <div class="bg-green-50 border border-green-200 p-5 rounded-3xl text-center">
+        <p class="text-sm text-gray-500 mb-1">This week income</p>
+        <p class="text-2xl font-bold text-green-600">+${{ weeklyIncome | number:'1.2-2' }}</p>
+      </div>
+      <div class="bg-red-50 border border-red-200 p-5 rounded-3xl text-center">
+        <p class="text-sm text-gray-500 mb-1">This week expense</p>
+        <p class="text-2xl font-bold text-red-500">-${{ weeklyExpense | number:'1.2-2' }}</p>
+      </div>
+      <div class="bg-blue-50 border border-blue-200 p-5 rounded-3xl text-center">
+        <p class="text-sm text-gray-500 mb-1">Transactions</p>
+        <p class="text-2xl font-bold text-blue-600">{{ weeklyCount }}</p>
+      </div>
     </div>
 
     <div class="mt-8">
@@ -34,7 +60,7 @@
 
     @if (showBudgetAlert) {
       <div class="mt-6 bg-red-100 border-2 border-red-500 text-red-700 p-6 rounded-3xl flex items-center gap-3 text-lg">
-        ⚠️ Budget Alert: You have spent more than 80% of your balance!
+        ⚠️ Budget Alert: Your card balance is below $500!
       </div>
     }
 
@@ -68,9 +94,9 @@
     <h2 class="text-2xl font-semibold mb-6">Add New Transaction</h2>
     <form (ngSubmit)="addTransaction()">
       <select [(ngModel)]="newTransaction.card" name="card" class="w-full p-4 border rounded-3xl mb-4" required>
-        <option value="" disabled selected>Select Card</option>
+        <option [ngValue]="null" disabled>Select Card</option>
         @for (c of cards; track c.id) {
-          <option [value]="c.id">{{ c.name }}</option>
+          <option [ngValue]="c.id">{{ c.name }}</option>
         }
       </select>
 
@@ -82,11 +108,11 @@
       </select>
 
       <select [(ngModel)]="newTransaction.category" name="category" class="w-full p-4 border rounded-3xl mb-4" required>
-        <option value="" disabled selected>
+        <option [ngValue]="null" disabled>
           {{ newTransaction.transaction_type === 'income' ? 'Select Income Source' : 'Select Category' }}
         </option>
         @for (cat of getAvailableCategories(); track cat.id) {
-          <option [value]="cat.id">{{ cat.icon }} {{ cat.name }}</option>
+          <option [ngValue]="cat.id">{{ cat.icon }} {{ cat.name }}</option>
         }
       </select>
 
@@ -103,7 +129,7 @@
     </form>
 
     <button (click)="exportCSV()"
-            class="mt-auto w-full py-5 border-2 border-black rounded-3xl text-lg font-medium">
+            class="mt-6 w-full py-5 border-2 border-black rounded-3xl text-lg font-medium">
       📤 Export CSV
     </button>
 

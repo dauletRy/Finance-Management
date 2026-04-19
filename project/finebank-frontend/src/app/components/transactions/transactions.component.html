@@ -2,8 +2,55 @@
   <h1 class="text-4xl font-bold mb-8">All Transactions</h1>
 
   <input [(ngModel)]="searchTerm" (input)="filter()"
-         placeholder="Search transactions..." 
+         placeholder="Search transactions..."
          class="w-full p-5 border rounded-3xl mb-8 text-lg">
+
+  @if (successMessage) {
+    <div class="mb-6 bg-green-100 border-2 border-green-500 text-green-700 p-4 rounded-3xl">
+      ✅ {{ successMessage }}
+    </div>
+  }
+  @if (errorMessage) {
+    <div class="mb-6 bg-red-100 border-2 border-red-500 text-red-700 p-4 rounded-3xl">
+      ❌ {{ errorMessage }}
+    </div>
+  }
+
+  <div class="bg-white p-6 rounded-3xl shadow mb-8">
+    <h2 class="text-xl font-semibold mb-4">Add Transaction</h2>
+    <div class="grid grid-cols-2 gap-4">
+      <select [(ngModel)]="newTransaction.card" name="card" class="p-4 border rounded-3xl" required>
+        <option [ngValue]="null" disabled>Select Card</option>
+        @for (c of cards; track c.id) {
+          <option [ngValue]="c.id">{{ c.name }}</option>
+        }
+      </select>
+
+      <select [(ngModel)]="newTransaction.transaction_type" name="type"
+              class="p-4 border rounded-3xl" (change)="onTypeChange()">
+        <option value="expense">Expense</option>
+        <option value="income">Income</option>
+      </select>
+
+      <select [(ngModel)]="newTransaction.category" name="category" class="p-4 border rounded-3xl" required>
+        <option [ngValue]="null" disabled>Select Category</option>
+        @for (cat of getAvailableCategories(); track cat.id) {
+          <option [ngValue]="cat.id">{{ cat.icon }} {{ cat.name }}</option>
+        }
+      </select>
+
+      <input [(ngModel)]="newTransaction.amount" name="amount" type="number"
+             placeholder="Amount" class="p-4 border rounded-3xl" required>
+
+      <input [(ngModel)]="newTransaction.description" name="description"
+             placeholder="Description" class="p-4 border rounded-3xl col-span-2" required>
+
+      <button (click)="addTransaction()"
+              class="col-span-2 py-4 bg-black text-white text-lg font-semibold rounded-3xl">
+        Add Transaction
+      </button>
+    </div>
+  </div>
 
   <div class="space-y-4">
     @for (t of filteredTransactions; track t.id) {
@@ -24,8 +71,4 @@
       </div>
     }
   </div>
-
-  @if (errorMessage) {
-    <div class="mt-8 bg-red-100 p-4 rounded-2xl text-red-700">{{ errorMessage }}</div>
-  }
 </div>

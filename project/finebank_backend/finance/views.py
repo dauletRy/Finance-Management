@@ -7,8 +7,6 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.http import HttpResponse
 import csv
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
 from .models import Card, Transaction, Category
 from django.db.models import Sum
 from .serializers import (
@@ -17,7 +15,6 @@ from .serializers import (
 )
 from decimal import Decimal
 
-# ==================== 2 FUNCTION-BASED VIEWS (FBV) ====================
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
@@ -35,20 +32,10 @@ def login_view(request):
         return Response({'error': 'Invalid credentials'}, status=400)
     return Response(serializer.errors, status=400)
 
-
-class CategoryList(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        categories = Category.objects.all()
-        return Response(CategorySerializer(categories, many=True).data)
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout_view(request):
-    # JWT is stateless – client just deletes token. We return success.
     return Response({'message': 'Logged out successfully'})
-
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -73,16 +60,13 @@ def dashboard_stats(request):
     })
     return Response(serializer.data)
 
-
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def export_transactions_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="finebank_transactions.csv"'
-
     writer = csv.writer(response)
     writer.writerow(['Date', 'Card', 'Type', 'Category', 'Description', 'Amount'])
-
     transactions = Transaction.objects.filter(card__user=request.user).order_by('-date')
     for t in transactions:
         writer.writerow([
@@ -95,15 +79,25 @@ def export_transactions_csv(request):
         ])
     return response
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def weekly_stats(request):
+    stats = Transaction.finance_objects.get_weekly_stats(request.user)
+    return Response(stats)
 
-# ==================== 2 CLASS-BASED VIEWS (CBV) – Full CRUD on Transaction ====================
+class CategoryList(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        categories = Category.objects.all()
+        return Response(CategorySerializer(categories, many=True).data)
+
 class CardListCreate(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         cards = Card.objects.filter(user=request.user)
-        serializer = CardSerializer(cards, many=True)
-        return Response(serializer.data)
+        return Response(CardSerializer(cards, many=True).data)
 
     def post(self, request):
         serializer = CardSerializer(data=request.data)
@@ -112,14 +106,12 @@ class CardListCreate(APIView):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
-
 class TransactionListCreate(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         transactions = Transaction.objects.filter(card__user=request.user)
-        serializer = TransactionSerializer(transactions, many=True)
-        return Response(serializer.data)
+        return Response(TransactionSerializer(transactions, many=True).data)
 
     def post(self, request):
         serializer = TransactionSerializer(data=request.data, context={'request': request})
@@ -128,8 +120,7 @@ class TransactionListCreate(APIView):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
-
-class TransactionDetail(APIView):   # second CBV – Update / Delete
+class TransactionDetail(APIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self, pk, user):
@@ -142,8 +133,7 @@ class TransactionDetail(APIView):   # second CBV – Update / Delete
         transaction = self.get_object(pk, request.user)
         if not transaction:
             return Response(status=404)
-        serializer = TransactionSerializer(transaction)
-        return Response(serializer.data)
+        return Response(TransactionSerializer(transaction).data)
 
     def put(self, request, pk):
         transaction = self.get_object(pk, request.user)
@@ -159,18 +149,15 @@ class TransactionDetail(APIView):   # second CBV – Update / Delete
         transaction = self.get_object(pk, request.user)
         if not transaction:
             return Response(status=404)
-
         card = transaction.card
-
         if transaction.transaction_type == 'expense':
             card.balance += transaction.amount
         else:
             card.balance -= transaction.amount
-
         card.save()
         transaction.delete()
-
         return Response(status=204)
+
 class CardDetail(APIView):
     permission_classes = [IsAuthenticated]
 

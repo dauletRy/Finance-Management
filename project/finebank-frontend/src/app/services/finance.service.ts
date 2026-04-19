@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Card, Transaction, Category, DashboardSummary, NewCard, NewTransaction, WeeklyStats } from '../models/finance.models';
 
 @Injectable({ providedIn: 'root' })
 export class FinanceService {
@@ -8,39 +9,43 @@ export class FinanceService {
 
   constructor(private http: HttpClient) {}
 
-  getCards(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/cards/`);
+  getCards(): Observable<Card[]> {
+    return this.http.get<Card[]>(`${this.apiUrl}/cards/`);
   }
 
-  createCard(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/cards/`, data);
+  createCard(data: NewCard): Observable<Card> {
+    return this.http.post<Card>(`${this.apiUrl}/cards/`, data);
   }
 
-  deleteCard(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/cards/${id}/`);
+  deleteCard(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/cards/${id}/`);
   }
 
-  getTransactions(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/transactions/`);
+  getTransactions(): Observable<Transaction[]> {
+    return this.http.get<Transaction[]>(`${this.apiUrl}/transactions/`);
   }
 
-  createTransaction(data: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/transactions/`, data);
+  createTransaction(data: NewTransaction): Observable<Transaction> {
+    return this.http.post<Transaction>(`${this.apiUrl}/transactions/`, data);
   }
 
-  deleteTransaction(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/transactions/${id}/`);
+  deleteTransaction(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/transactions/${id}/`);
   }
 
-  getDashboard(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/dashboard/`);
+  getDashboard(): Observable<DashboardSummary> {
+    return this.http.get<DashboardSummary>(`${this.apiUrl}/dashboard/`);
   }
 
-  getCategories(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/categories/`);
+  getCategories(): Observable<Category[]> {
+    return this.http.get<Category[]>(`${this.apiUrl}/categories/`);
   }
 
   exportCSV(): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/export-csv/`, { responseType: 'blob' });
+  }
+
+  getWeeklyStats(): Observable<WeeklyStats> {
+    return this.http.get<WeeklyStats>(`${this.apiUrl}/weekly-stats/`);
   }
 }
