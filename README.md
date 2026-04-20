@@ -3,7 +3,6 @@
 A full-stack personal finance tracker built with Django REST Framework and Angular 17.
 
 ## Group Members
-- Niyazbergenov Azamat
 - Ryskul Daulet
 - Zinatov Ruslan
 

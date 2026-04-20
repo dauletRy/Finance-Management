@@ -1,11 +1,10 @@
 # FineBank Project
-FineBank.io – Full-Stack Finance Management App
+FineBank.io – Full-Stack Finance Management web-page
 Project Concept: A personal finance tracker with virtual cards, transaction history, smart categorization, budget alerts, charts, and export.
-The UI matches the described photo layout: left sidebar navigation, central dashboard (Overview) with total balance + card carousel + chart + history list, right/bottom operations panel for quick transaction entry.
+The UI: left sidebar navigation, central dashboard (Overview) with total balance + card carousel + chart + history list, right/bottom operations panel for quick transaction entry.
 
 
 ## Group Members
-Niyazbergenov Azamat
 Ryskul Daulet
 Zinatov Ruslan
 
