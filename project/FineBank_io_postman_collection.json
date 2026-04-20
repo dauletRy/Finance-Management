@@ -1,0 +1,360 @@
+{
+  "info": {
+    "name": "FineBank.io - Full Collection",
+    "description": "Complete Postman collection for FineBank.io (Django + DRF) - All endpoints with examples",
+    "_postman_id": "finebank-full-collection-v1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "🔐 Auth",
+      "item": [
+        {
+          "name": "POST Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"access_token\", pm.response.json().access);",
+                  "pm.collectionVariables.set(\"refresh_token\", pm.response.json().refresh);",
+                  "console.log(\"✅ Token saved to variables\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{base_url}}/api/login/", "host": ["{{base_url}}"], "path": ["api", "login", ""] }
+          },
+          "response": [
+            {
+              "name": "Login Success",
+              "status": "OK",
+              "code": 200,
+              "originalRequest": {
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                }
+              },
+              "body": "{\n  \"access\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n  \"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n  \"user\": { \"id\": 1, \"username\": \"admin\" }\n}"
+            }
+          ]
+        },
+        {
+          "name": "POST Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/logout/", "host": ["{{base_url}}"], "path": ["api", "logout", ""] }
+          },
+          "response": [
+            {
+              "name": "Logout Success",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"message\": \"Logged out successfully\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "💳 Cards",
+      "item": [
+        {
+          "name": "GET All Cards",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/cards/", "host": ["{{base_url}}"], "path": ["api", "cards", ""] }
+          },
+          "response": [
+            {
+              "name": "Cards List",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  { \"id\": 1, \"name\": \"Visa •••• 4242\", \"balance\": \"2450.75\" },\n  { \"id\": 2, \"name\": \"Mastercard •••• 1234\", \"balance\": \"800.00\" }\n]"
+            }
+          ]
+        },
+        {
+          "name": "POST Create Card",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Visa •••• 4242\",\n  \"balance\": 2450.75\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{base_url}}/api/cards/", "host": ["{{base_url}}"], "path": ["api", "cards", ""] }
+          },
+          "response": [
+            {
+              "name": "Card Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"id\": 1,\n  \"name\": \"Visa •••• 4242\",\n  \"balance\": \"2450.75\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "DELETE Card",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/cards/1/", "host": ["{{base_url}}"], "path": ["api", "cards", "1", ""] }
+          },
+          "response": [
+            {
+              "name": "Card Deleted",
+              "status": "No Content",
+              "code": 204,
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "💸 Transactions",
+      "item": [
+        {
+          "name": "GET All Transactions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/transactions/", "host": ["{{base_url}}"], "path": ["api", "transactions", ""] }
+          },
+          "response": [
+            {
+              "name": "Transactions List",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  {\n    \"id\": 1,\n    \"card\": 1,\n    \"category\": 2,\n    \"amount\": \"12.50\",\n    \"description\": \"Uber ride to airport\",\n    \"transaction_type\": \"expense\",\n    \"date\": \"2025-04-15T10:30:00Z\"\n  }\n]"
+            }
+          ]
+        },
+        {
+          "name": "POST Create Transaction",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"card\": 1,\n  \"category\": 1,\n  \"amount\": 12.50,\n  \"description\": \"Uber ride to airport\",\n  \"transaction_type\": \"expense\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{base_url}}/api/transactions/", "host": ["{{base_url}}"], "path": ["api", "transactions", ""] }
+          },
+          "response": [
+            {
+              "name": "Transaction Created",
+              "status": "Created",
+              "code": 201,
+              "body": "{\n  \"id\": 1,\n  \"card\": 1,\n  \"category\": 1,\n  \"amount\": \"12.50\",\n  \"description\": \"Uber ride to airport\",\n  \"transaction_type\": \"expense\",\n  \"date\": \"2025-04-15T10:30:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "GET Transaction Detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/transactions/1/", "host": ["{{base_url}}"], "path": ["api", "transactions", "1", ""] }
+          },
+          "response": [
+            {
+              "name": "Transaction Detail",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": 1,\n  \"card\": 1,\n  \"category\": 1,\n  \"amount\": \"12.50\",\n  \"description\": \"Uber ride to airport\",\n  \"transaction_type\": \"expense\",\n  \"date\": \"2025-04-15T10:30:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "PUT Update Transaction",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"card\": 1,\n  \"category\": 1,\n  \"amount\": 20.00,\n  \"description\": \"Updated description\",\n  \"transaction_type\": \"expense\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": { "raw": "{{base_url}}/api/transactions/1/", "host": ["{{base_url}}"], "path": ["api", "transactions", "1", ""] }
+          },
+          "response": [
+            {
+              "name": "Transaction Updated",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"id\": 1,\n  \"card\": 1,\n  \"category\": 1,\n  \"amount\": \"20.00\",\n  \"description\": \"Updated description\",\n  \"transaction_type\": \"expense\",\n  \"date\": \"2025-04-15T10:30:00Z\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "DELETE Transaction",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/transactions/1/", "host": ["{{base_url}}"], "path": ["api", "transactions", "1", ""] }
+          },
+          "response": [
+            {
+              "name": "Transaction Deleted",
+              "status": "No Content",
+              "code": 204,
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "📊 Dashboard",
+      "item": [
+        {
+          "name": "GET Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/dashboard/", "host": ["{{base_url}}"], "path": ["api", "dashboard", ""] }
+          },
+          "response": [
+            {
+              "name": "Dashboard Stats",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"total_balance\": \"3250.75\",\n  \"total_income\": \"5000.00\",\n  \"total_expense\": \"1749.25\",\n  \"recent_transactions\": [\n    {\n      \"id\": 1,\n      \"card\": 1,\n      \"category\": 2,\n      \"amount\": \"12.50\",\n      \"description\": \"Uber ride\",\n      \"transaction_type\": \"expense\",\n      \"date\": \"2025-04-15T10:30:00Z\"\n    }\n  ]\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "📈 Weekly Stats",
+      "item": [
+        {
+          "name": "GET Weekly Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/weekly-stats/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "weekly-stats", ""]
+            }
+          },
+          "response": [
+            {
+              "name": "Weekly Stats Success",
+              "status": "OK",
+              "code": 200,
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/weekly-stats/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "weekly-stats", ""]
+                }
+              },
+              "body": "{\n  \"weekly_income\": \"1200.00\",\n  \"weekly_expense\": \"340.50\",\n  \"transaction_count\": 7\n}"
+            },
+            {
+              "name": "Weekly Stats - No transactions this week",
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"weekly_income\": 0,\n  \"weekly_expense\": 0,\n  \"transaction_count\": 0\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "📤 Export",
+      "item": [
+        {
+          "name": "GET Export CSV",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/export-csv/", "host": ["{{base_url}}"], "path": ["api", "export-csv", ""] }
+          },
+          "response": [
+            {
+              "name": "CSV Export",
+              "status": "OK",
+              "code": 200,
+              "body": "Date,Card,Type,Category,Description,Amount\n2025-04-15 10:30,Visa •••• 4242,expense,Transport,Uber ride to airport,12.50\n2025-04-14 09:00,Visa •••• 4242,income,Salary,Monthly salary,3000.00"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "🏷️ Categories",
+      "item": [
+        {
+          "name": "GET All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/categories/", "host": ["{{base_url}}"], "path": ["api", "categories", ""] }
+          },
+          "response": [
+            {
+              "name": "Categories List",
+              "status": "OK",
+              "code": 200,
+              "body": "[\n  { \"id\": 1, \"name\": \"Food\", \"icon\": \"🍔\" },\n  { \"id\": 2, \"name\": \"Transport\", \"icon\": \"🚕\" },\n  { \"id\": 3, \"name\": \"Tech\", \"icon\": \"💻\" },\n  { \"id\": 4, \"name\": \"Salary\", \"icon\": \"💰\" },\n  { \"id\": 5, \"name\": \"Freelance\", \"icon\": \"💼\" }\n]"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  }
+}
